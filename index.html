@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заказать авто</title>
+</head>
+<body>
+  <h2>Заказать авто</h2>
+  <form id="carOrderForm">
+    <input type="text" id="name" placeholder="Имя" required>
+    <input type="tel" id="phone" placeholder="Телефон" required>
+    <input type="email" id="email" placeholder="Email (опционально)">
+    <select id="country" required>
+      <option value="">Выберите страну доставки</option>
+      <option value="Корея">Корея</option>
+      <option value="Китай">Китай</option>
+      <option value="США">США</option>
+      <option value="Другое">Другое</option>
+    </select>
+    <input type="text" id="car" placeholder="Марка / модель авто" required>
+    <input type="number" id="budget" placeholder="Бюджет, $" required>
+    <button type="submit">Отправить заявку</button>
+  </form>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    const form = document.getElementById('carOrderForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        country: document.getElementById('country').value,
+        car: document.getElementById('car').value,
+        budget: document.getElementById('budget').value
+      };
+
+      const webhookURL = 'ВАШ_WEBHOOK_URL'; // сюда вставь Bitrix24 или Google Sheets
+
+      try {
+        const res = await fetch(webhookURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if(res.ok){
+          alert('Заявка отправлена!');
+          form.reset();
+          tg.close();
+        } else {
+          alert('Ошибка при отправке');
+        }
+      } catch(err){
+        console.error(err);
+        alert('Ошибка сети');
+      }
+    });
+  </script>
+</body>
+</html>
