@@ -163,7 +163,7 @@ document.getElementById('carForm').addEventListener('submit', async e => {
     budget: budget.value
   };
 
-  const WEBHOOK = 'ВАШ_WEBHOOK_URL'; // вставь сюда Bitrix24 вебхук
+  const WEBHOOK = 'https://b24-ynu924.bitrix24.ru/rest/1/oj5dbvbaueer7z1g/crm.lead.add.json'; // вставь сюда Bitrix24 вебхук
 
   try {
     const res = await fetch(WEBHOOK, {
