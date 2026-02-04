@@ -2,39 +2,47 @@
 document.getElementById('carForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const name = document.getElementById('name').value || 'Без имени';
-  const phone = document.getElementById('phone').value;
-  const telegram = document.getElementById('telegram').value;
-  const country = document.getElementById('country').value;
-  const car = document.getElementById('car').value;
-  const budget = document.getElementById('budget').value;
+  const data = {
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    telegram: document.getElementById('telegram').value,
+    from: document.getElementById('from').value,
+    car: document.getElementById('car').value,
+    budget: document.getElementById('budget').value
+  };
+
+  const WEBHOOK = 'https://b24-ynu924.bitrix24.ru/rest/1/oj5dbvbaueer7z1g/crm.lead.add.json';
 
   const body = {
     fields: {
-      TITLE: 'Заявка: ' + name,
-      NAME: name,
-      PHONE: [{
-        VALUE: phone,
-        VALUE_TYPE: 'WORK'
-      }],
+      TITLE: `Заявка: ${data.name}`,
+      NAME: data.name,
+      PHONE: [
+        {
+          VALUE: data.phone,
+          VALUE_TYPE: "WORK"
+        }
+      ],
       COMMENTS:
-        'Telegram: ' + telegram + '\n' +
-        'Откуда авто: ' + country + '\n' +
-        'Марка / модель: ' + car + '\n' +
-        'Бюджет: ' + budget + ' ₽'
+        `Telegram: ${data.telegram}\n` +
+        `Откуда авто: ${data.from}\n` +
+        `Марка / модель: ${data.car}\n` +
+        `Бюджет: ${data.budget} ₽`
     }
   };
 
-  fetch('https://b24-ynu924.bitrix24.ru/rest/1/oj5dbvbaueer7z1g/crm.lead.add.json', {
+  fetch(WEBHOOK, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   })
+  .then(response => response.json())
   .then(() => {
-    alert('Заявка отправлена');
+    alert('Заявка отправлена!');
     document.getElementById('carForm').reset();
   })
-  .catch(() => {
+  .catch(error => {
+    console.error(error);
     alert('Ошибка отправки');
   });
 });
